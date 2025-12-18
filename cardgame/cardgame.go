@@ -50,7 +50,7 @@ func (c *Client) PlayGame(userGuess int) (bool, error) {
 	// Вытягиваем карты, пока не найдём даму
 	for {
 		// ОШИБКА 1: запрашиваем неправильное количество карт
-		drawResp, err := c.client.Get(fmt.Sprintf("%s/%s/draw/?count=2", c.baseURL, deckID))
+		drawResp, err := c.client.Get(fmt.Sprintf("%s/%s/draw/?count=1", c.baseURL, deckID))
 		if err != nil {
 			return false, fmt.Errorf("failed to draw card: %w", err)
 		}
@@ -62,13 +62,13 @@ func (c *Client) PlayGame(userGuess int) (bool, error) {
 		}
 
 		// ОШИБКА 2: неправильно работаем с массивом cards
-		card := draw.Cards
+		card := draw.Cards[0]
 		realCount++
 
 		// ОШИБКА 3: неправильный доступ к полям карты
-		c.printf("%s of %s\n", card[0].Value, card[0].Suit)
+		c.printf("%s of %s\n", card.Value, card.Suit)
 
-		if card[0].Value == "QUEEN" {
+		if card.Value == "QUEEN" {
 			break
 		}
 	}
